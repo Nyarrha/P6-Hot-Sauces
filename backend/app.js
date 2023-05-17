@@ -3,10 +3,10 @@ const app = express();
 const path = require('path');
 const mongoose = require('mongoose');
 
-const stuffRoutes = require('./routes/sauce');
+const saucesRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 
-mongoose.connect('mongodb+srv://<user>:<password>@cluster0.patoolh.mongodb.net/?retryWrites=true&w=majority',
+mongoose.connect('mongodb+srv://quentin:Vp4aXZXq0xWdMEAF@cluster0.patoolh.mongodb.net/?retryWrites=true&w=majority',
   { useNewUrlParser: true,
     useUnifiedTopology: true })
   .then(() => console.log('Connexion à MongoDB réussie !'))
@@ -23,7 +23,9 @@ mongoose.connect('mongodb+srv://<user>:<password>@cluster0.patoolh.mongodb.net/?
 
 // *** 
 
-
+app.use('/api/sauces', saucesRoutes);
+app.use('/api/auth', userRoutes);
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 // *** 
 
