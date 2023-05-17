@@ -21,12 +21,8 @@ mongoose.connect('mongodb+srv://quentin:Vp4aXZXq0xWdMEAF@cluster0.patoolh.mongod
     next();
   });
 
-// *** 
-
 app.use('/api/sauces', saucesRoutes);
 app.use('/api/auth', userRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-// *** 
-
-  module.exports = app;
+module.exports = app;
