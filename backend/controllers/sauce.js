@@ -41,7 +41,7 @@ exports.createSauce = (req, res, next) => {
  };
 
   exports.deleteSauce = (req, res, next) => {
-    Thing.findOne({ _id: req.params.id})
+    Sauce.findOne({ _id: req.params.id})
       .then(thing => {
         if(thing.userId != req.auth.userId) {
           res.status(401).json({message: 'Non autorisé'});
@@ -60,13 +60,15 @@ exports.createSauce = (req, res, next) => {
   };
 
   exports.getOneSauce = (req, res, next) => {
-    Thing.findOne({ _id: req.params.id})
+    Sauce.findOne({ _id: req.params.id})
     .then(thing => res.status(200).json(thing))
     .catch(error => res.status(404).json(error));
   };
 
   exports.getAllSauces = (req, res, next) => {
-    Thing.find()
+    Sauce.find()
     .then(things => res.status(200).json(things))
     .catch(error => res.status(400).json({ error }));
   };
+
+ 
