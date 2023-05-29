@@ -23,6 +23,7 @@ exports.createSauce = (req, res, next) => {
   exports.modifySauce = (req, res, next) => {
     Sauce.findOne({_id: req.params.id})
         .then((sauce) => {
+          // Traitement cas : utilisateur non-autorisé
             if (sauce.userId != req.auth.userId) {
                 res.status(401).json({ message : 'Not authorized'});
                 // if(req.file){
@@ -30,19 +31,25 @@ exports.createSauce = (req, res, next) => {
                 //     if (err) console.log(err);
                 //   });
                 // }
+
+                // S'il y a un fichier : le supprimer, et afficher l'erreur
                 req.file && fs.unlink(`images/${ req.file.filename }`, err => err && console.log(err));
             } else {
+              // Initialiser objet sauce
               let sauceObject = {};
+              // Si fichier joint(upload) : récupérer nom fichier actuel dans l'URL puis supprimer le fichier correspondant
               if(req.file){
                 const filename = sauce.imageUrl.split("/images/")[1];
                 fs.unlink(`images/${ filename }`, err => {
                   if (err) console.log(err);
                 });
+              // Modifier les infos de l'objet sauce avec les nouvelles informations(incluant imageUrl et afficher la nouvelle image)
                 sauceObject = {
                   ...JSON.parse(req.body.sauce),
                   userId: req.auth.userId,
                   imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
                   }
+              // Sinon : simplement modifier infos avec celles de la requête user
               } else {
                 sauceObject = { 
                   ...req.body,
@@ -51,15 +58,17 @@ exports.createSauce = (req, res, next) => {
               };
                 Sauce.updateOne({ _id: req.params.id}, { ...sauceObject, _id: req.params.id})
                 .then(() => res.status(200).json({message : 'Objet modifié!'}))
-                .catch(error => res.status(401).json({ error }));
+                .catch(err => res.status(401).json({ err }));
             }
         })
         .catch((error) => {
-          if(req.file){
-            fs.unlink(`images/${ req.file.filename }`, err => {
-              if (err) console.log(err);
-            });
-          }
+          // S'il y a un fichier : le supprimer puis afficher l'erreur
+          req.file && fs.unlink(`images/${ req.file.filename }`, err => err && console.log(err))
+          // if(req.file){
+          //   fs.unlink(`images/${ req.file.filename }`, err => {
+          //     if (err) console.log(err);
+          //   });
+          // }
             res.status(400).json({ error });
         });
  };
