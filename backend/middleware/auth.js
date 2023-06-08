@@ -1,5 +1,7 @@
+// Importation module
 const jwt = require('jsonwebtoken');
 
+// Exportation/création fonction attribuant un token d'authentification unique et vérifié côté serveur
 module.exports = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
