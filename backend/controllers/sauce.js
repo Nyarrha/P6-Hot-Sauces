@@ -32,7 +32,7 @@ exports.createSauce = (req, res, next) => {
         .then((sauce) => {
           // Traitement cas : utilisateur non-autorisé
             if (sauce.userId != req.auth.userId) {
-                res.status(401).json({ message : 'Not authorized'});
+                res.status(403).json({ message : '403: unauthorized request'});
                 // S'il y a un fichier : le supprimer, et afficher l'erreur
                 req.file && fs.unlink(`images/${ req.file.filename }`, err => err && console.log(err));
             } else {
